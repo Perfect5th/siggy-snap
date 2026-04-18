@@ -15,6 +15,10 @@ grade: devel
 confinement: devmode
 version: '1.6.0'
 
+lint:
+  ignore:
+    - library: [usr/lib/jvm/**]
+
 apps:
   siggy:
     command: bin/siggy
@@ -36,7 +40,27 @@ parts:
     source-tag: v0.14.2
     override-build: |
       craftctl default
-      cp build/install/signal-cli/bin/signal-cli $CRAFT_PART_INSTALL/usr/bin/signal-cli
+      mkdir -p $CRAFT_PART_INSTALL/usr/sbin $CRAFT_PART_INSTALL/usr/lib
+      cp build/install/signal-cli/bin/signal-cli $CRAFT_PART_INSTALL/usr/sbin/signal-cli
       cp build/install/signal-cli/lib/* $CRAFT_PART_INSTALL/usr/lib/
-    build-packages: [openjdk-25-jdk]
-    stage-packages: [openjdk-25-jre]
+    build-packages: [openjdk-25-jdk-headless]
+    stage:
+      - usr/sbin/signal-cli
+      - usr/lib
+
+  runtime:
+    plugin: jlink
+    jlink-modules:
+      - java.base
+      - java.logging
+      - java.management
+      - java.naming
+      - java.net.http
+      - java.security.jgss
+      - java.sql
+      - jdk.crypto.ec
+      - jdk.net
+      - jdk.unsupported
+    build-packages: [openjdk-25-jdk-headless]
+    after: [signal-cli]
+
