@@ -14,6 +14,11 @@ steps:
 ```bash
 snapcraft pack
 ```
-4. Install the Snap in developer mode:
+4. Install the Snap:
 ```bash
-snap install ./siggy_1.6.0_amd64.snap --devmode
+snap install ./siggy_1.6.0_amd64.snap --dangerous
+```
+5. Connect the interface that allows siggy to access signal-cli's data directory:
+```bash
+snap connect siggy:signal-cli-data
+```
