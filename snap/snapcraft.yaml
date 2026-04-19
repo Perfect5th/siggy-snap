@@ -12,16 +12,27 @@ donation: https://ko-fi.com/johnsideserf
 website: https://siggy.chat
 type: app
 grade: devel
-confinement: devmode
+confinement: strict
 version: '1.6.0'
 
 lint:
   ignore:
     - library: [usr/lib/jvm/**]
 
+plugs:
+  signal-cli-data:
+    interface: personal-files
+    write:
+      - $HOME/.local/share/signal-cli
+
 apps:
   siggy:
     command: bin/siggy
+    plugs:
+      - home
+      - opengl
+      - network
+      - signal-cli-data
 
 parts:
   siggy:
